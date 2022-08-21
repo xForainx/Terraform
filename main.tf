@@ -33,12 +33,20 @@ resource "aws_instance" "my_ec2_instance" {
 		sudo apt-get install -y apache2
 		sudo systemctl start apache2
 		sudo systemctl enable apache2
-		echo "<h1>Hello devopssec</h1>" > /var/www/html/index.html
+		echo "<h1>Avale ta bouche</h1>" > /var/www/html/index.html
 	EOF
     
     tags = {
-        Name = "terraform test"
+        Name = "${terraform.workspace == "prod" ? "prod-valoche" : "default-valoche"}"
     }
+}
+
+terraform {
+  backend "s3" {
+    bucket = "terraform-forain-tuto-01"
+    key    = "states/terraform.state"
+    region = "eu-west-3"
+  }
 }
 
 output "public_ip" {
